@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagerApp.Data.Migrations
 {
     [DbContext(typeof(LibraryManagerAppDbContext))]
-    [Migration("20240809094019_InitialLibraryDB")]
-    partial class InitialLibraryDB
+    [Migration("20240809143656_libraryDB")]
+    partial class libraryDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LibraryManagerApp.Data.Migrations
 {
-    public partial class InitialLibraryDB : Migration
+    public partial class libraryDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
