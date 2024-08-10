@@ -11,7 +11,7 @@ namespace LibraryManagerApp.Data.Models
         public string Name { get; set; }
 
         [MaxLength(50)]
-        public string Location { get; set; }
+        public string? Location { get; set; }
 
         public IList<BookShelf> BookShelves { get; set; }
     }

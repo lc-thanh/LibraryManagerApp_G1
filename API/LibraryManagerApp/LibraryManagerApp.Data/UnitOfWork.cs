@@ -18,25 +18,27 @@ namespace LibraryManagerApp.Data
 
         public LibraryManagerAppDbContext Context => _context;
 
-        public IBaseRepository<Admin> AdminRepository => new AdminRepository(_context);
+        public IAdminRepository AdminRepository => new AdminRepository(_context);
 
-        public IBaseRepository<Author> AuthorRepository => new AuthorRepository(_context);
+        public IAuthorRepository AuthorRepository => new AuthorRepository(_context);
 
-        public IBaseRepository<Book> BookRepository => new BookRepository(_context);
+        public IBookRepository BookRepository => new BookRepository(_context);
 
-        public IBaseRepository<BookShelf> BookShelfRepository => new BookShelfRepository(_context);
+        public IBookShelfRepository BookShelfRepository => new BookShelfRepository(_context);
 
-        public IBaseRepository<Cabinet> CabinetRepository => new CabinetRepository(_context);
+        public ICabinetRepository CabinetRepository => new CabinetRepository(_context);
 
-        public IBaseRepository<Category> CategoryRepository => new CategoryRepository(_context);
+        public ICategoryRepository CategoryRepository => new CategoryRepository(_context);
 
-        public IBaseRepository<Librarian> LibrarianRepository => new LibrarianRepository(_context);
+        public ILibrarianRepository LibrarianRepository => new LibrarianRepository(_context);
 
-        public IBaseRepository<Loan> LoanRepository => new LoanRepository(_context);
+        public ILoanRepository LoanRepository => new LoanRepository(_context);
 
-        public IBaseRepository<LoanDetail> LoanDetailRepository => new LoanDetailRepository(_context);
+        public ILoanDetailRepository LoanDetailRepository => new LoanDetailRepository(_context);
 
-        public IBaseRepository<Member> MemberRepository => new MemberRepository(_context);
+        public IMemberRepository MemberRepository => new MemberRepository(_context);
+
+        public IUserRepository UserRepository => new UserRepository(_context);
 
         public IBaseRepository<T> BaseRepository<T>() where T : class
         {
