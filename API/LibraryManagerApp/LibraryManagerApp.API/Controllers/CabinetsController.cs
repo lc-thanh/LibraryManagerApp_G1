@@ -16,38 +16,41 @@ namespace LibraryManagerApp.API.Controllers
             _unitOfWork = unitOfWork;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllCabinets()
         {
             var cabinets = await _unitOfWork.CabinetRepository.GetAllAsync();
             return Ok(cabinets);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateMember(MemberCreateModel memberDto)
+        public async Task<IActionResult> CreateCabinet(CabinetCreateModel cabinetDto)
         {
-            if(memberDto == null)
+            if (cabinetDto == null)
             {
                 return BadRequest();
             }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            Member memberToCreate = new Member
+
+            var cabinetToCreate = new Cabinet
             {
-                FullName = memberDto.FullName,
-                Email = memberDto.Email,
-                Phone = memberDto.Phone,
-                DateOfBirth = memberDto.DateOfBirth,
-                Address = memberDto.Address,
-                Password = memberDto.Password,
+                Name = cabinetDto.Name,
+                Location = cabinetDto.Location,
+                Description = cabinetDto.Description, 
             };
-            _unitOfWork.MemberRepository.Add(memberToCreate);
+
+            _unitOfWork.CabinetRepository.Add(cabinetToCreate);
+
             var saved = await _unitOfWork.SaveChangesAsync();
-            if(saved > 0)
+            if (saved > 0)
             {
-                return Ok("Create new member");
+                return Ok("New cabinet created successfully");
             }
-            return BadRequest();
+
+            return BadRequest("Failed to create new cabinet");
         }
     }
 }
+
