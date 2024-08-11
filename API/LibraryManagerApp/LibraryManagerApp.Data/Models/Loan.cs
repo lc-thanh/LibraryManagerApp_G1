@@ -7,7 +7,6 @@ namespace LibraryManagerApp.Data.Models
     {
         public Guid Id { get; set; }
 
-        [Required]
         public DateTime LoanDate { get; set; } = DateTime.Now;
 
         [Required]

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace LibraryManagerApp.Data.Models
 {
@@ -28,6 +29,8 @@ namespace LibraryManagerApp.Data.Models
         public string? ImageUrl { get; set; }
 
         public string? Description { get; set; }
+
+        public DateTime CreatedOn { get; set; } = DateTime.Now;
 
         public Guid? AuthorId { get; set; }
         public Author Author { get; set; }

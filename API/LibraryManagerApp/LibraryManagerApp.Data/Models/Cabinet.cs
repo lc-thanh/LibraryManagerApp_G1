@@ -13,6 +13,8 @@ namespace LibraryManagerApp.Data.Models
         [MaxLength(50)]
         public string? Location { get; set; }
 
+        public DateTime CreatedOn { get; set; } = DateTime.Now;
+
         public IList<BookShelf> BookShelves { get; set; }
     }
 }

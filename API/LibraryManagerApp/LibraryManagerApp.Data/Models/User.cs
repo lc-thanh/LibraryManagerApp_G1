@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace LibraryManagerApp.Data.Models
 {
-    public abstract class User
+    public class User
     {
         public Guid Id { get; set; }
 
@@ -28,10 +28,11 @@ namespace LibraryManagerApp.Data.Models
         public DateTime? DateOfBirth { get; set; }
 
         [Required]
-        [PasswordStrength] // Validate password
-        public string Password { get; set; }
+        public string Password { get; set; } // Hashed password
 
         [Required]
         public RoleEnum Role { get; set; }
+
+        public DateTime CreatedOn { get; set; } = DateTime.Now;
     }
 }

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagerApp.API", "LibraryManagerApp.API\LibraryManagerApp.API.csproj", "{B4807822-DE89-444A-994B-2415C9A28748}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryManagerApp.API", "LibraryManagerApp.API\LibraryManagerApp.API.csproj", "{B4807822-DE89-444A-994B-2415C9A28748}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagerApp.Data", "LibraryManagerApp.Data\LibraryManagerApp.Data.csproj", "{88871021-5C92-4B1B-9F26-4D0974D51D43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryManagerApp.Data", "LibraryManagerApp.Data\LibraryManagerApp.Data.csproj", "{88871021-5C92-4B1B-9F26-4D0974D51D43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

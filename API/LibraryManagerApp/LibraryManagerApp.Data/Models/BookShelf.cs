@@ -10,6 +10,8 @@ namespace LibraryManagerApp.Data.Models
         [MaxLength(50)]
         public string Name { get; set; }
 
+        public DateTime CreatedOn { get; set; } = DateTime.Now;
+
         public IList<Book> Books { get; set; }
 
         public Guid CabinetId { get; set; }
