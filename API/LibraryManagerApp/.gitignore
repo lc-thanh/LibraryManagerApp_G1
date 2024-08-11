@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Migrations folder
+.LibraryManagerApp.Data/Migrations/
+
+# appsettings.json
+.LibraryManagerApp.API/appsettings.json
