@@ -363,7 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Migrations folder
-.LibraryManagerApp.Data/Migrations/
+LibraryManagerApp.Data/Migrations/
 
 # appsettings.json
-.LibraryManagerApp.API/appsettings.json
+LibraryManagerApp.API/appsettings.json
