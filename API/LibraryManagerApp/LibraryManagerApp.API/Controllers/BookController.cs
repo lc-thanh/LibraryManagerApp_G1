@@ -11,15 +11,6 @@ namespace LibraryManagerApp.API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public string Title { get; private set; }
-        public Author AuthorName { get; private set; }
-        public string Publisher { get; private set; }
-        public int? PublishedYear { get; private set; }
-        public int Quantity { get; private set; }
-        public int TotalPages { get; private set; }
-        public string ImageUrl { get; private set; }
-        public string Description { get; private set; }
-
         public BookController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -31,7 +22,7 @@ namespace LibraryManagerApp.API.Controllers
             return Ok(books);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateBook([FromBody] BookController bookDto)
+        public async Task<IActionResult> CreateBook(BookCreateModel bookDto)
         {
             if (bookDto == null)
             {
@@ -44,7 +35,6 @@ namespace LibraryManagerApp.API.Controllers
             Book bookToCreate = new Book
             {
                 Title = bookDto.Title,
-                Author = bookDto.AuthorName,
                 Publisher = bookDto.Publisher,
                 PublishedYear = bookDto.PublishedYear,
                 Quantity = bookDto.Quantity,
@@ -104,7 +94,7 @@ namespace LibraryManagerApp.API.Controllers
             {
                 return NotFound("Book not found");
             }
-            _unitOfWork.BookRepository.Remove(existingBook);
+            _unitOfWork.BookRepository.Delete(existingBook);
             var saved = await _unitOfWork.SaveChangesAsync();
             if (saved > 0)
             {

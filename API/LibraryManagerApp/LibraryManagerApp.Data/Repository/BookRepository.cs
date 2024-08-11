@@ -10,12 +10,6 @@ namespace LibraryManagerApp.Data.Repository
         public BookRepository(LibraryManagerAppDbContext context) : base(context)
         {
         }
-
-        public void Remove(Book existingBook)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<Book>> SearchAsync(string query)
         {
             return await _context.Books
