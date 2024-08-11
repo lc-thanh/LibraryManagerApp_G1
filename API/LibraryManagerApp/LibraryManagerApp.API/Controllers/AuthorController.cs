@@ -39,7 +39,7 @@ namespace LibraryManagerApp.API.Controllers
         {
             if (authorDto == null)
             {
-                return BadRequest("Author data must be provided.");
+                return BadRequest();
             }
 
             if (!ModelState.IsValid)
@@ -69,7 +69,7 @@ namespace LibraryManagerApp.API.Controllers
         {
             if (authorDto == null)
             {
-                return BadRequest("Author data must be provided.");
+                return BadRequest();
             }
 
             if (!ModelState.IsValid)
@@ -84,7 +84,6 @@ namespace LibraryManagerApp.API.Controllers
             }
 
             authorToUpdate.Name = authorDto.Name;
-           
 
             _unitOfWork.AuthorRepository.Update(authorToUpdate);
 
