@@ -13,11 +13,12 @@ namespace LibraryManagerApp.Data.Models
         [Required]
         public DateTime DueDate { get; set; }
 
-        public DateTime ReturnedDate { get; set; }
+        public DateTime? ReturnedDate { get; set; }
 
         [Required]
         public StatusEnum Status { get; set; }
 
+        [Required]
         public Guid MemberId { get; set; }
         public Member Member { get; set; }
 
