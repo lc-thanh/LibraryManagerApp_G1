@@ -1,6 +1,7 @@
 ﻿using LibraryManagerApp.Data.Data;
 using LibraryManagerApp.Data.Interfaces;
 using LibraryManagerApp.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagerApp.Data.Repository
 {
@@ -8,6 +9,18 @@ namespace LibraryManagerApp.Data.Repository
     {
         public BookRepository(LibraryManagerAppDbContext context) : base(context)
         {
+        }
+
+        public void Remove(Book existingBook)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Book>> SearchAsync(string query)
+        {
+            return await _context.Books
+                .Where(b => b.Title.Contains(query) || b.Author.Name.Contains(query) || b.Description.Contains(query))
+                .ToListAsync();
         }
     }
 }
