@@ -10,6 +10,17 @@ namespace LibraryManagerApp.Data.Repository
         public BookRepository(LibraryManagerAppDbContext context) : base(context)
         {
         }
+
+        public IQueryable<Book> GetAllInforsQuery()
+        {
+            var books = _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Category)
+                .Include(b => b.BookShelf);
+
+            return books;
+        }
+
         public async Task<IEnumerable<Book>> SearchAsync(string query)
         {
             return await _context.Books

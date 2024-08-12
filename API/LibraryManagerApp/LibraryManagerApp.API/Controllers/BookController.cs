@@ -2,6 +2,7 @@
 using LibraryManagerApp.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using LibraryManagerApp.Data.Dto;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagerApp.API.Controllers
 {
@@ -15,12 +16,36 @@ namespace LibraryManagerApp.API.Controllers
         {
             _unitOfWork = unitOfWork;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAllBooks()
         {
-            var books = await _unitOfWork.BookRepository.GetAllAsync();
-            return Ok(books);
+            var books = _unitOfWork.BookRepository.GetAllInforsQuery();
+
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            var bookViewModels = await books.Select(b => new BookViewModel
+            {
+                Title = b.Title,
+                Publisher = b.Publisher,
+                PublishedYear = b.PublishedYear,
+                Quantity = b.Quantity,
+                AvailableQuantity = b.AvailableQuantity,
+                TotalPages = b.TotalPages,
+                ImageUrl = $"{baseUrl}/images/books/{b.ImageUrl}",
+                Description = b.Description,
+                AuthorId = b.AuthorId,
+                AuthorName = b.Author.Name,
+                CategoryId = b.CategoryId,
+                CategoryName = b.Category.Name,
+                BookShelfId = b.BookShelfId,
+                BookShelfName = b.BookShelf.Name,
+                CreatedOn = b.CreatedOn,
+            }).ToListAsync();
+
+            return Ok(bookViewModels);
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateBook(BookCreateModel bookDto)
         {
@@ -51,7 +76,6 @@ namespace LibraryManagerApp.API.Controllers
                 return Ok("Created new book!");
             }
             return BadRequest();
-
         }
 
         [HttpPut("{id}")]
