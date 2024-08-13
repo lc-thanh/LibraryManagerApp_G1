@@ -4,7 +4,7 @@ namespace LibraryManagerApp.API.Controllers
 {
     [Route("api/v1/[controller]s")]
     [ApiController]
-    public class ImagesController : Controller
+    public class ImageController : Controller
     {
         [HttpPost("upload-image")]
         public async Task<IActionResult> UploadImage(IFormFile file)

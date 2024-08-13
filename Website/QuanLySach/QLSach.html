@@ -41,11 +41,17 @@
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="../assets/css/demo.css" />
 
-    <link rel="stylesheet" href="style.css">
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <!-- My sources -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
   </head>
   <body>
-    <script src="QLSach.js"></script>
     <div class="wrapper sidebar_minimize">
       <!-- Sidebar -->
       <div class="sidebar" data-background-color="dark">
@@ -736,8 +742,132 @@
                 <div class="card">
                   <div class="card-header">
                     <div class="d-flex align-items-center">
+                      <h4 class="card-title">Tìm kiếm nâng cao</h4>
+                    </div>
+                  </div>
+
+                  <div class="card-body">
+                    <div class="row ">
+                      <div class="col-xl-4">
+                        <div class="form-group">
+                          <label for="searchBook"
+                            >Tìm kiếm</label
+                          >
+                          <div class="input-icon" style="height: 35px;">
+                            <input
+                              id="searchBook"
+                              type="text"
+                              class="form-control"
+                              placeholder="Tìm kiếm..."
+                            />
+                            <span class="input-icon-addon">
+                              <i class="fa fa-search"></i>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col-xl-4">
+                        <div class="form-group">
+                          <label for="exampleFormControlSelect1"
+                            >Sắp xếp theo</label
+                          >
+                          <select
+                            class="form-select"
+                            style="height: 35px;"
+                            id="exampleFormControlSelect1"
+                          >
+                            <option value="">Không</option>
+                            <option>↑ Tiêu đề</option>
+                            <option>↓ Tiêu đề</option>
+                            <option>↑ Số lượng</option>
+                            <option>↓ Số lượng</option>
+                            <option>↑ Hiện có</option>
+                            <option>↓ Hiện có</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-xl-4 pt-1">
+                        <label>Năm xuất bản</label>
+                        <div class="d-flex">
+                          <div class="form-group">
+                            <div class="input-group">
+                              <span class="input-group-text" id="basic-addon1"
+                                >Từ</span
+                              >
+                              <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Bắt đầu"
+                              />
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="input-group">
+                              <span class="input-group-text" id="basic-addon1"
+                                >Đến</span
+                              >
+                              <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Kết thúc"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                    <div class="row mb-2">
+                      <div class="col-xl-6">
+                        <div class="form-group">
+                          <!-- https://select2.org/getting-started/basic-usage -->
+                          <label for="authorFilterSelector">Tác giả</label>
+                          <select 
+                            id="authorFilterSelector" 
+                            name="states[]"
+                            multiple="multiple"
+                            style="width: 100%;"
+                          >
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-xl-6">
+                        <div class="form-group">
+                          <!-- https://select2.org/getting-started/basic-usage -->
+                          <label for="categoryFilterSelector">Loại tài liệu</label>
+                          <select 
+                            id="categoryFilterSelector" 
+                            name="states[]"
+                            multiple="multiple"
+                            style="width: 100%;"
+                          >
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      id="btn_filter"
+                      class="btn btn-black btn-round ms-auto"
+                      style="float: inline-end;"
+                    >
+                      <i class="fas fa-filter"></i>
+                      Áp dụng
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="d-flex align-items-center">
                       <h4 class="card-title">Chi tiết</h4>
                       <button
+                        id="btn_addRowModal"
                         class="btn btn-primary btn-round ms-auto"
                         data-bs-toggle="modal"
                         data-bs-target="#addRowModal"
@@ -756,12 +886,12 @@
                       role="dialog"
                       aria-hidden="true"
                     >
-                      <div class="modal-dialog" role="document">
+                      <div class="modal-dialog modal-dialog-scrollable" role="document">
                         <div class="modal-content">
                           <div class="modal-header border-0">
                             <h5 class="modal-title">
                               <span class="fw-mediumbold"> Thêm </span>
-                              <span class="fw-light"> Sách Mới </span>
+                              <span class="fw-light"> Sách mới </span>
                             </h5>
                             <button
                               type="button"
@@ -773,12 +903,31 @@
                             </button>
                           </div>
                           <div class="modal-body">
-                            <p class="small">
+                            <p class="small mb-1">
                               Điền thông tin sách để thêm mới.
                               <br>
                               <span style="color: red;">Lưu ý!</span> Những trường có dấu <span style="color: red;">*</span> là bắt buộc
                             </p>
                             <form>
+                              <div class="form-group mb-3">
+                                <label class="form-label">Ảnh sách</label>
+                                <div>
+                                  <div class="mb-4 d-flex justify-content-center">
+                                    <img id="selectedImageAdd" src="https://localhost:44396/images/books/null.png" alt="example placeholder"
+                                      style="height: 350px;" />
+                                  </div>
+                                  <div class="d-flex justify-content-center">
+                                    <button id="reset_img_btnAdd" type="button" class="btn btn-outline-danger me-3 p-2">
+                                      <i class="fas fa-trash-alt me-2"></i>Xóa ảnh</button>
+                                    <div data-mdb-ripple-init class="btn btn-primary p-2">
+                                      <label class="form-label text-white m-1" for="uploadImgAdd">
+                                        <i class="fas fa-file-image me-2"></i>Chọn ảnh</label>
+                                      <input type="file" accept="image/*" class="form-control d-none" id="uploadImgAdd" />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
                               <div class="row">
                                 <div class="col-sm-12">
                                   <div class="form-group form-group-default">
@@ -815,10 +964,69 @@
                                 </div>
                                 <div class="col-sm-12">
                                   <div class="form-group p-0">
-                                    <div class="input-group">
-                                      <!-- https://select2.org/getting-started/basic-usage -->
-
-                                    </div>
+                                    <!-- https://select2.org/getting-started/basic-usage -->
+                                    <label for="authorSelector">Tác giả</label>
+                                    <select 
+                                      id="authorSelector" 
+                                      name="state" 
+                                      style="width: 100%;"
+                                    >
+                                      <option value="" disabled selected>-- Chọn tác giả --</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="col-sm-12 mt-4">
+                                  <div class="form-group p-0">
+                                    <!-- https://select2.org/getting-started/basic-usage -->
+                                    <label for="categorySelector">Loại tài liệu</label>
+                                    <select 
+                                      id="categorySelector" 
+                                      name="state" 
+                                      style="width: 100%;"
+                                    >
+                                      <option value="" disabled selected>-- Chọn loại tài liệu --</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="col-sm-12 mt-4">
+                                  <div class="form-group p-0">
+                                    <!-- https://select2.org/getting-started/basic-usage -->
+                                    <label for="bookshelfSelector">Ngăn sách</label>
+                                    <select 
+                                      id="bookshelfSelector" 
+                                      name="state" 
+                                      style="width: 100%;"
+                                    >
+                                      <option value="" disabled selected>-- Chọn ngăn để sách --</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="col-md-6 mt-4 pe-1">
+                                  <div class="form-group form-group-default">
+                                    <label>Nhà xuất bản</label>
+                                    <input
+                                      id="addPublisher"
+                                      type="text"
+                                      class="form-control"
+                                      placeholder="Nhà xuất bản"
+                                    />
+                                  </div>
+                                </div>
+                                <div class="col-md-6 mt-4 pb-1">
+                                  <div class="form-group form-group-default">
+                                    <label>Năm xuất bản</label>
+                                    <input
+                                      id="addPulishedYear"
+                                      type="number"
+                                      class="form-control"
+                                      placeholder="Năm xuất bản"
+                                    />
+                                  </div>
+                                </div>
+                                <div class="col-sm-12">
+                                  <div class="form-group p-0">
+                                    <label for="addDescription">Mô tả</label>
+                                    <textarea class="form-control" id="addDescription" rows="5"></textarea>
                                   </div>
                                 </div>
                               </div>
@@ -830,14 +1038,14 @@
                               id="addRowButton"
                               class="btn btn-primary"
                             >
-                              Add
+                              Thêm
                             </button>
                             <button
                               type="button"
                               class="btn btn-danger"
                               data-dismiss="modal"
                             >
-                              Close
+                              Đóng
                             </button>
                           </div>
                         </div>
@@ -857,16 +1065,41 @@
                             <th scope="col">Tác giả</th>
                             <th scope="col">Loại tài liệu</th>
                             <th scope="col">Ngăn sách</th>
-                            <th scope="col">NXB</th>
+                            <th scope="col">Nhà xuất bản</th>
                             <th scope="col">Năm xuất bản</th>
                             <th scope="col">Thời gian tạo</th>
-                            <th scope="col">Actions</th>
+                            <th scope="col">Sửa/Xóa</th>
                           </tr>
                         </thead>
                         <tbody id="booksTable">
 
                         </tbody>
                       </table>
+                      <div style="display: flex; justify-content: center;">
+                        <ul class="pagination pg-primary">
+                          <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                              <span aria-hidden="true">&laquo;</span>
+                              <span class="sr-only">Previous</span>
+                            </a>
+                          </li>
+                          <li class="page-item active">
+                            <a class="page-link" href="#">1</a>
+                          </li>
+                          <li class="page-item">
+                            <a class="page-link" href="#">2</a>
+                          </li>
+                          <li class="page-item">
+                            <a class="page-link" href="#">3</a>
+                          </li>
+                          <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                              <span aria-hidden="true">&raquo;</span>
+                              <span class="sr-only">Next</span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -942,5 +1175,8 @@
 
     <!-- Kaiadmin DEMO methods, don't include it in your project! -->
     <script src="../assets/js/setting-demo2.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+    <script src="QLSach.js"></script>
   </body>
 </html>

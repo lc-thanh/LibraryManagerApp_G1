@@ -16,3 +16,7 @@ td img {
     max-width: 150px;
     height: 150px;
 }
+
+.modal-body {
+    overflow-x: hidden !important; /* Ẩn cuộn ngang */
+}

@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace LibraryManagerApp.API.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/[controller]s")]
     [ApiController]
-    public class CabinetsController : Controller
+    public class CabinetController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public CabinetsController(IUnitOfWork unitOfWork)
+        public CabinetController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }

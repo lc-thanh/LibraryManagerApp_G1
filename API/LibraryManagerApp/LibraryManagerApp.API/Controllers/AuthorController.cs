@@ -7,11 +7,11 @@ namespace LibraryManagerApp.API.Controllers
 {
     [Route("api/v1/[controller]s")]
     [ApiController]
-    public class AuthorsController : Controller
+    public class AuthorController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public AuthorsController(IUnitOfWork unitOfWork)
+        public AuthorController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }

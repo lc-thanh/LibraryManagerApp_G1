@@ -3,6 +3,7 @@ using LibraryManagerApp.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using LibraryManagerApp.Data.Dto;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
 
 namespace LibraryManagerApp.API.Controllers
 {
@@ -11,20 +12,31 @@ namespace LibraryManagerApp.API.Controllers
     public class BookController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public BookController(IUnitOfWork unitOfWork)
+        public BookController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllBooks()
+        public async Task<IActionResult> GetAllBooks(
+            [FromForm] string searchString = "",
+            [FromForm] string orderBy = "",
+            [FromForm] string publishedYearRange = "",
+            [FromForm] List<Guid>? authorIds = null,
+            [FromForm] List<Guid>? categoryIds = null,
+            [FromForm] int pageNumber = 1,
+            [FromForm] int pageSize = 10)
         {
-            var books = _unitOfWork.BookRepository.GetAllInforsQuery();
+            var booksQuery = _unitOfWork.BookRepository.GetAllInforsQuery();
+
+            
 
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
-            var bookViewModels = await books.Select(b => new BookViewModel
+            var bookViewModels = await booksQuery.Select(b => new BookViewModel
             {
                 Title = b.Title,
                 Publisher = b.Publisher,
@@ -47,7 +59,7 @@ namespace LibraryManagerApp.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBook(BookCreateModel bookDto)
+        public async Task<IActionResult> CreateBook([FromForm] BookCreateModel bookDto, [FromForm] IFormFile image)
         {
             if (bookDto == null)
             {
@@ -57,15 +69,37 @@ namespace LibraryManagerApp.API.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            // Xử lý upload ảnh
+            string uniqueFileName = "";
+            if (image != null)
+            {
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/books");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await image.CopyToAsync(fileStream);
+                }
+            }
+            else
+            {
+                uniqueFileName = "null.png";
+            }
+
             Book bookToCreate = new Book
             {
                 Title = bookDto.Title,
                 Publisher = bookDto.Publisher,
                 PublishedYear = bookDto.PublishedYear,
                 Quantity = bookDto.Quantity,
+                AvailableQuantity = bookDto.Quantity,
                 TotalPages = bookDto.TotalPages,
-                ImageUrl = bookDto.ImageUrl,
+                ImageUrl = uniqueFileName,
                 Description = bookDto.Description,
+                AuthorId = bookDto.AuthorId,
+                CategoryId = bookDto.CategoryId,
+                BookShelfId = bookDto.BookShelfId,
             };
 
             _unitOfWork.BookRepository.Add(bookToCreate);
@@ -75,7 +109,7 @@ namespace LibraryManagerApp.API.Controllers
             {
                 return Ok("Created new book!");
             }
-            return BadRequest();
+            return BadRequest("Some thing went wrong while saving!");
         }
 
         [HttpPut("{id}")]
@@ -91,15 +125,15 @@ namespace LibraryManagerApp.API.Controllers
                 return NotFound("Book not found.");
             }
             existringBook.Title = model.Title;
-            existringBook.Author = model.Author;
+            existringBook.AuthorId = model.AuthorId;
             existringBook.Publisher = model.Publisher;
             existringBook.PublishedYear = model.PublishedYear;
             existringBook.Quantity = model.Quantity;
             existringBook.TotalPages = model.TotalPages;
-            existringBook.ImageUrl = model.ImageUrl;
+            //existringBook.ImageUrl = model.ImageUrl;
             existringBook.Description = model.Description;
-            existringBook.Category = model.Category;
-            existringBook.BookShelf = model.ShelfName;
+            existringBook.CategoryId = model.CategoryId;
+            existringBook.BookShelfId = model.BookShelfId;
 
             _unitOfWork.BookRepository.Update(existringBook);
             var saved = await _unitOfWork.SaveChangesAsync();

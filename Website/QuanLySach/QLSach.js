@@ -1,5 +1,49 @@
 $(document).ready(function() {
-    const apiUrl = 'https://localhost:44396/api/v1/Books'; // Thay bằng API endpoint của bạn
+    // FILTER
+    $("#authorFilterSelector").select2()
+    $.ajax({
+        url: 'https://localhost:44396/api/v1/Authors',
+        method: 'GET',
+        success: function(response) {
+            renderAuthorFilterSelector(response);
+        }
+    });
+    function renderAuthorFilterSelector(authors)
+    {
+        const authorSelector = $('#authorFilterSelector');
+        authorSelector.empty();
+        
+        authors.forEach(author => {
+            const option = `<option value="${author.id}">${author.name}</option>`;
+            authorSelector.append(option);
+        });
+    }
+
+    $("#categoryFilterSelector").select2()
+    $.ajax({
+        url: 'https://localhost:44396/api/v1/Categories',
+        method: 'GET',
+        success: function(response) {
+            renderCategoryFilterSelector(response);
+        }
+    });
+    function renderCategoryFilterSelector(categories)
+    {
+        const categorySelector = $('#categoryFilterSelector');
+        categorySelector.empty();
+        
+        categories.forEach(category => {
+            const option = `<option value="${category.id}">${category.name}</option>`;
+            categorySelector.append(option);
+        });
+    }
+
+    $('#btn_filter').on('click', function() {
+        console.log($("#authorFilterSelector").val());
+        
+    })
+
+    const apiUrl = 'https://localhost:44396/api/v1/Books';
 
     // Khởi tạo dữ liệu với tham số mặc định
     fetchBooks();
@@ -106,4 +150,137 @@ $(document).ready(function() {
             fetchBooks($(this).text());
         });
     }
+
+
+    // ===================== AddRowModel ========================
+    $("#authorSelector").select2({ 
+        dropdownParent: $("#addRowModal") 
+    })
+    $("#categorySelector").select2({ 
+        dropdownParent: $("#addRowModal") 
+    })
+    $("#bookshelfSelector").select2({ 
+        dropdownParent: $("#addRowModal") 
+    })
+
+    $('#btn_addRowModal').on('click', function() {
+        $.ajax({
+            url: 'https://localhost:44396/api/v1/Authors',
+            method: 'GET',
+            success: function(response) {
+                renderAuthorSelector(response);
+            }
+        });
+
+        $.ajax({
+            url: 'https://localhost:44396/api/v1/Categories',
+            method: 'GET',
+            success: function(response) {
+                renderCategorySelector(response);
+            }
+        });
+
+        $.ajax({
+            url: 'https://localhost:44396/api/v1/Bookshelves',
+            method: 'GET',
+            success: function(response) {
+                renderBookshelfSelector(response);
+            }
+        });
+    })
+
+    function renderAuthorSelector(authors)
+    {
+        const authorSelector = $('#authorSelector');
+        authorSelector.empty();
+        
+        authorSelector.append(`<option value="" disabled selected>-- Chọn tác giả --</option>`);
+        authors.forEach(author => {
+            const option = `<option value="${author.id}">${author.name}</option>`;
+            authorSelector.append(option);
+        });
+    }
+
+    function renderCategorySelector(categories)
+    {
+        const categorySelector = $('#categorySelector');
+        categorySelector.empty();
+        
+        categorySelector.append(`<option value="" disabled selected>-- Chọn loại tài liệu --</option>`);
+        categories.forEach(category => {
+            const option = `<option value="${category.id}">${category.name}</option>`;
+            categorySelector.append(option);
+        });
+    }
+
+    function renderBookshelfSelector(bookshelves)
+    {
+        const bookshelfSelector = $('#bookshelfSelector');
+        bookshelfSelector.empty();
+        
+        bookshelfSelector.append(`<option value="" disabled selected>-- Chọn ngăn để sách --</option>`);
+        bookshelves.forEach(bookshelf => {
+            const option = `<option value="${bookshelf.id}">${bookshelf.name}</option>`;
+            bookshelfSelector.append(option);
+        });
+    }
+
+    $('#authorSelector').on('change', function() {
+        console.log($('#authorSelector').find(":selected").val());
+    })
+
+    // Nhấn nút Xóa ảnh
+    $('#reset_img_btnAdd').on('click', function () {
+        $('#selectedImageAdd').attr('src', `https://localhost:44396/images/books/null.png`)
+    })
+
+    $('#uploadImgAdd').on('change', function () {
+        const [file] = uploadImgAdd.files
+        console.log(file);
+        
+        if (file)   
+            $('#selectedImageAdd').attr('src', URL.createObjectURL(file))
+    })
+
+    $('#addRowButton').on('click', function () {
+        var formData = new FormData();
+        formData.append('title', $('#addTitle').val());
+        formData.append('publisher', $('#addPublisher').val());
+        formData.append('publishedYear', $('#addPulishedYear').val());
+        formData.append('quantity', $('#addQuantity').val());
+        formData.append('totalPages', $('#addTotalPages').val());
+        formData.append('description', $('#addDescription').val());
+        formData.append('authorId', $('#authorSelector').find(":selected").val());
+        formData.append('categoryId', $('#categorySelector').find(":selected").val());
+        formData.append('bookShelfId', $('#bookshelfSelector').find(":selected").val());
+
+        const [file] = uploadImgAdd.files
+        formData.append('image', file);
+
+        console.log(formData.get("image"));
+        
+        $.ajax({
+            url: 'https://localhost:44396/api/v1/Books',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                alert('Thêm sách thành công!');
+                console.log(response);
+                
+                // Clear form hoặc thực hiện hành động khác
+            },
+            error: function () {
+                swal("Thất bại!", "Có lỗi trong quá trình thêm sách!", {
+                    icon: "error",
+                    buttons: {
+                      confirm: {
+                        className: "btn btn-danger",
+                      },
+                    },
+                  });
+            }
+        });
+    });
 });
