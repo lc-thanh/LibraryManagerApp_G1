@@ -758,7 +758,7 @@
                               id="searchBook"
                               type="text"
                               class="form-control"
-                              placeholder="Tìm kiếm..."
+                              placeholder="Tiêu đề, NXB, Ngăn sách"
                             />
                             <span class="input-icon-addon">
                               <i class="fa fa-search"></i>
@@ -769,21 +769,27 @@
                       
                       <div class="col-xl-4">
                         <div class="form-group">
-                          <label for="exampleFormControlSelect1"
+                          <label for="orderBySelect"
                             >Sắp xếp theo</label
                           >
                           <select
                             class="form-select"
                             style="height: 35px;"
-                            id="exampleFormControlSelect1"
+                            id="orderBySelect"
                           >
                             <option value="">Không</option>
-                            <option>↑ Tiêu đề</option>
-                            <option>↓ Tiêu đề</option>
-                            <option>↑ Số lượng</option>
-                            <option>↓ Số lượng</option>
-                            <option>↑ Hiện có</option>
-                            <option>↓ Hiện có</option>
+                            <option value="Title-Asc">↑ Tiêu đề</option>
+                            <option value="Title-Desc">↓ Tiêu đề</option>
+                            <option value="Quantity-Asc">↑ Số lượng</option>
+                            <option value="Quantity-Desc">↓ Số lượng</option>
+                            <option value="AvailableQuantity-Asc">↑ Hiện có</option>
+                            <option value="AvailableQuantity-Desc">↓ Hiện có</option>
+                            <option value="TotalPages-Asc">↑ Số trang</option>
+                            <option value="TotalPages-Desc">↓ Số trang</option>
+                            <option value="PublishedYear-Asc">↑ Năm xuất bản</option>
+                            <option value="PublishedYear-Desc">↓ Năm xuất bản</option>
+                            <option value="CreatedOn-Asc">↑ Thời gian tạo</option>
+                            <option value="CreatedOn-Desc">↓ Thời gian tạo</option>
                           </select>
                         </div>
                       </div>
@@ -797,7 +803,8 @@
                                 >Từ</span
                               >
                               <input
-                                type="text"
+                                id="startPubYear"
+                                type="number"
                                 class="form-control"
                                 placeholder="Bắt đầu"
                               />
@@ -809,7 +816,8 @@
                                 >Đến</span
                               >
                               <input
-                                type="text"
+                                id="endPubYear"
+                                type="number"
                                 class="form-control"
                                 placeholder="Kết thúc"
                               />
@@ -865,7 +873,16 @@
                 <div class="card">
                   <div class="card-header">
                     <div class="d-flex align-items-center">
-                      <h4 class="card-title">Chi tiết</h4>
+                      <h4 class="card-title">Số lượng</h4>
+                        <select
+                            class="form-select ms-3"
+                            style="height: 35px; width: 100px;"
+                            id="pageSizeSelect"
+                        >
+                          <option value="5">5</option>
+                          <option value="10" selected>10</option>
+                          <option value="20">20</option>
+                        </select>
                       <button
                         id="btn_addRowModal"
                         class="btn btn-primary btn-round ms-auto"
@@ -1077,7 +1094,7 @@
                       </table>
                       <div style="display: flex; justify-content: center;">
                         <ul class="pagination pg-primary">
-                          <li class="page-item">
+                          <li id="prevPage" class="page-item">
                             <a class="page-link" href="#" aria-label="Previous">
                               <span aria-hidden="true">&laquo;</span>
                               <span class="sr-only">Previous</span>
@@ -1092,7 +1109,7 @@
                           <li class="page-item">
                             <a class="page-link" href="#">3</a>
                           </li>
-                          <li class="page-item">
+                          <li id="nextPage" class="page-item">
                             <a class="page-link" href="#" aria-label="Next">
                               <span aria-hidden="true">&raquo;</span>
                               <span class="sr-only">Next</span>
@@ -1176,6 +1193,7 @@
     <!-- Kaiadmin DEMO methods, don't include it in your project! -->
     <script src="../assets/js/setting-demo2.js"></script>
 
+    <script src="https://pagination.js.org/dist/2.6.0/pagination.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
     <script src="QLSach.js"></script>
   </body>

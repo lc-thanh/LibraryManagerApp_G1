@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using LibraryManagerApp.Data.Pagination;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace LibraryManagerApp.Data.Interfaces
 {
@@ -19,5 +21,12 @@ namespace LibraryManagerApp.Data.Interfaces
             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
             string includeProperties = ""
         );
+        Task<PaginatedResult<T>> GetPaginatedAsync(
+            IQueryable<T> query,
+            List<Expression<Func<T, bool>>>? filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+            string includeProperties = "",
+            int pageIndex = 1,
+            int pageSize = 10);
     }
 }

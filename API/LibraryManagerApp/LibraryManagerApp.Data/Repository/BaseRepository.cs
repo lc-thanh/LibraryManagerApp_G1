@@ -1,6 +1,8 @@
 ﻿using LibraryManagerApp.Data.Data;
 using LibraryManagerApp.Data.Interfaces;
+using LibraryManagerApp.Data.Pagination;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace LibraryManagerApp.Data.Repository
@@ -59,6 +61,41 @@ namespace LibraryManagerApp.Data.Repository
             }
 
             return query;
+        }
+
+        public async Task<PaginatedResult<T>> GetPaginatedAsync(
+            IQueryable<T> query,
+            List<Expression<Func<T, bool>>>? filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+            string includeProperties = "",
+            int pageIndex = 1,
+            int pageSize = 10)
+        {
+            if (filter != null)
+            {
+                if (filter.Count > 0)
+                {
+                    foreach (Expression<Func<T, bool>> expression in filter)
+                    {
+                        query = query.Where(expression);
+                    }
+                }
+            }
+
+            foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
+            }
+
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            var totalCount = await query.CountAsync();
+            var items = await query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return new PaginatedResult<T>(items, totalCount, pageIndex, pageSize);
         }
 
         public IEnumerable<T> GetAll()
