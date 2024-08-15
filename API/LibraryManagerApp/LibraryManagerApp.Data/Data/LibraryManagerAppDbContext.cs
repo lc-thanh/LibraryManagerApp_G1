@@ -24,6 +24,7 @@ namespace LibraryManagerApp.Data.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Loan> Loans { get; set; }
         public DbSet<LoanDetail> LoanDetails { get; set; }
+        public DbSet<UserAction> UserActions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -71,6 +72,11 @@ namespace LibraryManagerApp.Data.Data
                 .HasOne<Book>(ld => ld.Book)
                 .WithMany(b => b.LoanDetails)
                 .HasForeignKey(ld => ld.BookId);
+
+            modelBuilder.Entity<UserAction>()
+                .HasOne<User>(ua => ua.User)
+                .WithMany(u => u.UserActions)
+                .HasForeignKey(ua => ua.UserId);
 
 
             // Seed data for Cabinets

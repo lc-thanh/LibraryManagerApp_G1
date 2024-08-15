@@ -1,4 +1,5 @@
-﻿using LibraryManagerApp.Data;
+﻿using LibraryManagerApp.API.Hubs;
+using LibraryManagerApp.Data;
 using LibraryManagerApp.Data.Data;
 using LibraryManagerApp.Data.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -35,8 +36,10 @@ namespace LibraryManagerApp.API
                     builder.AllowAnyOrigin()
                            .AllowAnyMethod()
                            .AllowAnyHeader();
+                           //.AllowCredentials();  // SignalR;
                 });
             });
+            builder.Services.AddSignalR();
 
             // Thêm dịch vụ Authentication với JWT Bearer
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -48,6 +51,8 @@ namespace LibraryManagerApp.API
                         ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
+                        //RoleClaimType = "role",
+                        ClockSkew = TimeSpan.Zero,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                     };
                 });
@@ -107,6 +112,8 @@ namespace LibraryManagerApp.API
 
             // Cho phép truy cập các file tĩnh từ thư mục wwwroot
             app.UseStaticFiles();
+
+            app.MapHub<NotificationHub>("/notificationHub");
 
             app.UseCors("AllowAll");
 

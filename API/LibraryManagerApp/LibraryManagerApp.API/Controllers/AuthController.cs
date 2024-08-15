@@ -94,7 +94,8 @@ namespace LibraryManagerApp.API.Controllers
                 {
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
                     RefreshToken = refreshToken,
-                    Expiration = token.ValidTo
+                    Expiration = token.ValidTo,
+                    Role = user.Role
                 });
 
             return BadRequest("Something wrong while logging!");
@@ -203,7 +204,7 @@ namespace LibraryManagerApp.API.Controllers
             var principal = GetPrincipalFromExpiredToken(accessToken);
             if (principal == null)
             {
-                return BadRequest("Invalid access token or refresh token");
+                return BadRequest("Cannot Get Principal From Expired Token");
             }
 
             string userEmail = principal.Identity.Name;
@@ -235,9 +236,10 @@ namespace LibraryManagerApp.API.Controllers
             {
                 ValidateAudience = false,
                 ValidateIssuer = false,
+                ValidateLifetime = false,
                 ValidateIssuerSigningKey = true,
+                ClockSkew = TimeSpan.Zero,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"])),
-                ValidateLifetime = false
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
