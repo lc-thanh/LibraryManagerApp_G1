@@ -192,8 +192,8 @@ Circles.create({
 //Notify
 $.notify({
 	icon: 'icon-bell',
-	title: 'Kaiadmin',
-	message: 'Premium Bootstrap 5 Admin Dashboard',
+	title: 'Quản lý thư viện',
+	message: 'Chào mừng bạn đến với LibraryManagerApp',
 },{
 	type: 'secondary',
 	placement: {

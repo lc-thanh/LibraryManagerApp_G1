@@ -1,6 +1,30 @@
+if (!localStorage.getItem('accessToken'))
+{
+    window.location.href = '../AuthPages/Auth.html';
+}
+
+
+
 $(document).ready(function() {
+    if (getRole() != 'Admin' && getRole() != 'Librarian')
+    {
+        // redirect to Member pages
+    }
     const apiUrl = 'https://localhost:44396/api/v1/Books';
 
+    // =========== NOTIFICATION - SignalR =========== 
+    // const connection = new signalR.HubConnectionBuilder()
+    // .withUrl("https://localhost:44396/api/v1/notificationHub")
+    // .build();
+    // connection.on("ReceiveMessage", function (user, message) {
+    //     // Hiển thị thông báo cho người dùng
+    //     alert(`${user}: ${message}`);
+    // });
+    // connection.start().catch(function (err) {
+    //     return console.error(err.toString());
+    // });
+    // =========== END NOTIFICATION ============
+    
     // FILTER
     $("#authorFilterSelector").select2()
     $.ajax({
@@ -49,6 +73,7 @@ $(document).ready(function() {
     var pageSize;
 
     $('#btn_filter').on('click', function() {
+        pageNumber = 1;
         authorIds = $('#authorFilterSelector').val();
         categoryIds = $('#categoryFilterSelector').val();
         searchString = $('#searchBook').val();
@@ -86,11 +111,13 @@ $(document).ready(function() {
 
         // Tạo query string từ object params
         var queryString = $.param(params);
-        console.log(queryString.replaceAll("%5B%5D", ""));
 
         $.ajax({
             url: apiUrl + '?' + queryString.replaceAll("%5B%5D", ""),
             method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${getAccessToken()}` // Đính kèm Access Token vào header
+            },
             success: function(response) {
                 console.log(response);
                 
@@ -163,6 +190,20 @@ $(document).ready(function() {
                     pageNumber = currentPage;
                     fetchBooks();
                 });
+            },
+            error: function(response) {
+                if (response.status === 401) { // Token hết hạn
+                    // Thử lấy Access Token mới bằng Refresh Token
+                    refreshAccessToken()
+                        .done(function() {
+                            // Thử lại yêu cầu API với token mới
+                            return fetchBooks();
+                        })
+                        .fail(function() {
+                        });
+                } else {
+                    console.error('API error:', response);
+                }
             }
         });
     }
@@ -322,7 +363,8 @@ $(document).ready(function() {
             $('#selectedImageAdd').attr('src', URL.createObjectURL(file))
     })
 
-    $('#addRowButton').on('click', function () {
+    function add_new_book()
+    {
         var formData = new FormData();
         formData.append('title', $('#addTitle').val());
         formData.append('publisher', $('#addPublisher').val());
@@ -336,31 +378,56 @@ $(document).ready(function() {
 
         const [file] = uploadImgAdd.files
         formData.append('image', file);
-
-        console.log(formData.get("image"));
         
         $.ajax({
             url: 'https://localhost:44396/api/v1/Books',
             type: 'POST',
+            headers: {
+                'Authorization': `Bearer ${getAccessToken()}` // Đính kèm Access Token vào header
+            },
             data: formData,
             contentType: false,
             processData: false,
             success: function (response) {
-                alert('Thêm sách thành công!');
-                console.log(response);
-                
-                // Clear form hoặc thực hiện hành động khác
-            },
-            error: function () {
-                swal("Thất bại!", "Có lỗi trong quá trình thêm sách!", {
-                    icon: "error",
+                swal("Thành công!", "Đã thêm sách mới!", {
+                    icon: "success",
                     buttons: {
-                      confirm: {
-                        className: "btn btn-danger",
-                      },
+                        confirm: {
+                            className: "btn btn-success",
+                        },
                     },
-                  });
+                });
+                console.log(response);
+                fetchBooks();
+            },
+            error: function (response) {
+                if (response.status === 401) { // Token hết hạn
+                    // Thử lấy Access Token mới bằng Refresh Token
+                    refreshAccessToken()
+                        .done(function() {
+                            // Thử lại yêu cầu API với token mới
+                            add_new_book()
+                        })
+                        .fail(function() {
+                        });
+                } else {
+                    console.log("Add new book error: " + response.responseJSON);
+
+                    swal("Thất bại!", "Có lỗi trong quá trình thêm sách!", {
+                        icon: "error",
+                        buttons: {
+                            confirm: {
+                                className: "btn btn-danger",
+                            },
+                        },
+                    });
+                }
+                
             }
         });
+    }
+
+    $('#addRowButton').on('click', function () {
+        add_new_book();
     });
 });

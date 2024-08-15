@@ -38,5 +38,7 @@ namespace LibraryManagerApp.Data.Models
         public RoleEnum Role { get; set; }
 
         public DateTime CreatedOn { get; set; } = DateTime.Now;
+
+        public IList<UserAction> UserActions { get; set; }
     }
 }

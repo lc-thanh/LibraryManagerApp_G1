@@ -6,6 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using LibraryManagerApp.Data.Pagination;
 using System.Linq.Expressions;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.SignalR;
+using LibraryManagerApp.API.Hubs;
 
 namespace LibraryManagerApp.API.Controllers
 {
@@ -15,13 +20,20 @@ namespace LibraryManagerApp.API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public BookController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
+        public BookController(
+            IUnitOfWork unitOfWork, 
+            IWebHostEnvironment webHostEnvironment,
+            IHubContext<NotificationHub> hubContext
+        )
         {
             _unitOfWork = unitOfWork;
             _webHostEnvironment = webHostEnvironment;
+            _hubContext = hubContext;
         }
 
+        [Authorize(Roles = "Admin,Librarian")]
         [HttpGet]
         public async Task<IActionResult> GetAllBooks(
             [FromQuery] string? searchString = "",
@@ -78,14 +90,14 @@ namespace LibraryManagerApp.API.Controllers
             {
                 if (authorIds.Count() > 0)
                 {
-                    filterList.Add(b => (b.AuthorId != null) ? authorIds.Contains((Guid) b.AuthorId) : false);
+                    filterList.Add(b => (b.AuthorId != null) ? authorIds.Contains((Guid)b.AuthorId) : false);
                 }
             }
             if (categoryIds != null)
             {
                 if (categoryIds.Count() > 0)
                 {
-                    filterList.Add(b => (b.CategoryId != null) ? categoryIds.Contains((Guid) b.CategoryId) : false);
+                    filterList.Add(b => (b.CategoryId != null) ? categoryIds.Contains((Guid)b.CategoryId) : false);
                 }
             }
 
@@ -149,7 +161,7 @@ namespace LibraryManagerApp.API.Controllers
             }
 
             PaginatedResult<BookViewModel> paginatedBooks = await _unitOfWork.BaseRepository<BookViewModel>().GetPaginatedAsync(
-                bookViewModels, 
+                bookViewModels,
                 filterList,
                 orderFunc,
                 "",
@@ -157,11 +169,13 @@ namespace LibraryManagerApp.API.Controllers
                 pageSize
             );
 
+            string userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
             return Ok(paginatedBooks);
         }
 
+        [Authorize(Roles = "Admin,Librarian")]
         [HttpPost]
-        public async Task<IActionResult> CreateBook([FromForm] BookCreateModel bookDto, [FromForm] IFormFile image)
+        public async Task<IActionResult> CreateBook([FromForm] BookCreateModel bookDto, [FromForm] IFormFile? image)
         {
             if (bookDto == null)
             {
@@ -209,6 +223,8 @@ namespace LibraryManagerApp.API.Controllers
             var saved = await _unitOfWork.SaveChangesAsync();
             if (saved > 0)
             {
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", "Library", $"Một quyển sách mới vừa được thêm! '{bookToCreate.Title}'");
+
                 return Ok("Created new book!");
             }
             return BadRequest("Some thing went wrong while saving!");
