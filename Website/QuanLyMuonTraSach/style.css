@@ -1,0 +1,22 @@
+th, td {
+    text-align: center;
+    border: 1px solid #ddd !important;
+}
+
+th {
+    padding: 10px 5px !important;
+}
+
+td {
+    padding: 10px 7px !important;
+}
+
+td img {
+    width: auto;
+    max-width: 150px;
+    height: 150px;
+}
+
+.modal-body {
+    overflow-x: hidden !important; /* Ẩn cuộn ngang */
+}
