@@ -5,6 +5,7 @@ namespace LibraryManagerApp.Data.Dto
 {
     public class BookViewModel
     {
+        public Guid Id { get; set; }
         public string Title { get; set; }
 
         public string? Publisher { get; set; }

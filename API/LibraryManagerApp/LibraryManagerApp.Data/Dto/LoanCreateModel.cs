@@ -10,15 +10,15 @@ namespace LibraryManagerApp.Data.Dto
     public class LoanCreateModel
     {
         [Required]
-        public Guid MemberId { get; set; }
+        public string MemberEmail { get; set; }
+
         [Required]
-        public List<Guid> BookId { get; set; }
+        public List<Guid> BookIds { get; set; }
+
         [Required]
         public DateTime LoanDate { get; set; } = DateTime.Now;
 
         [Required]
         public DateTime DueDate { get; set; }
-        [Required]
-        public int Quantity { get; set; }
     }
 }

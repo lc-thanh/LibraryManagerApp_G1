@@ -21,6 +21,10 @@ namespace LibraryManagerApp.Data.Models
         public Guid MemberId { get; set; }
         public Member Member { get; set; }
 
+        [Required]
+        public Guid LibrarianId { get; set; }
+        public Librarian Librarian { get; set; }
+
         public IList<LoanDetail> LoanDetails { get; set; }
     }
 }

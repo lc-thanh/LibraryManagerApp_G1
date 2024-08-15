@@ -33,7 +33,6 @@ namespace LibraryManagerApp.API.Controllers
             _hubContext = hubContext;
         }
 
-        [Authorize(Roles = "Admin,Librarian")]
         [HttpGet]
         public async Task<IActionResult> GetAllBooks(
             [FromQuery] string? searchString = "",
@@ -50,6 +49,7 @@ namespace LibraryManagerApp.API.Controllers
 
             var bookViewModels = booksQuery.Select(b => new BookViewModel
             {
+                Id = b.Id,
                 Title = b.Title,
                 Publisher = b.Publisher,
                 PublishedYear = b.PublishedYear,
@@ -173,6 +173,36 @@ namespace LibraryManagerApp.API.Controllers
             return Ok(paginatedBooks);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetBook(Guid id)
+        {
+            var booksQuery = _unitOfWork.BookRepository.GetAllInforsQuery();
+
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            var bookViewModel = await booksQuery.Select(b => new BookViewModel
+            {
+                Id = b.Id,
+                Title = b.Title,
+                Publisher = b.Publisher,
+                PublishedYear = b.PublishedYear,
+                Quantity = b.Quantity,
+                AvailableQuantity = b.AvailableQuantity,
+                TotalPages = b.TotalPages,
+                ImageUrl = $"{baseUrl}/images/books/{b.ImageUrl}",
+                Description = b.Description,
+                AuthorId = b.AuthorId,
+                AuthorName = b.Author.Name,
+                CategoryId = b.CategoryId,
+                CategoryName = b.Category.Name,
+                BookShelfId = b.BookShelfId,
+                BookShelfName = b.BookShelf.Name,
+                CreatedOn = b.CreatedOn,
+            }).FirstOrDefaultAsync(b => b.Id == id);
+
+            return Ok(bookViewModel);
+        }
+
         [Authorize(Roles = "Admin,Librarian")]
         [HttpPost]
         public async Task<IActionResult> CreateBook([FromForm] BookCreateModel bookDto, [FromForm] IFormFile? image)
@@ -277,17 +307,6 @@ namespace LibraryManagerApp.API.Controllers
                 return Ok("Book deleted seccessfully.");
             }
             return StatusCode(500, "A problem occurred while deleting the book.");
-        }
-
-        [HttpGet("search")]
-        public async Task<IActionResult> SearchBook(string query)
-        {
-            if(string.IsNullOrWhiteSpace(query))
-            {
-                return BadRequest("Search query is required.");
-            }
-            var books = await _unitOfWork.BookRepository.SearchAsync(query);
-            return Ok(books);
         }
     }
 }

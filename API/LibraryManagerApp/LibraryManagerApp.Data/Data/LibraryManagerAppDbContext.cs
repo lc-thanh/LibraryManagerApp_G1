@@ -59,7 +59,14 @@ namespace LibraryManagerApp.Data.Data
             modelBuilder.Entity<Loan>()
                 .HasOne<Member>(l => l.Member)
                 .WithMany(m => m.Loans)
-                .HasForeignKey(l => l.MemberId);
+                .HasForeignKey(l => l.MemberId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Loan>()
+                .HasOne<Librarian>(l => l.Librarian)
+                .WithMany(l => l.Loans)
+                .HasForeignKey(l => l.LibrarianId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<LoanDetail>().HasKey(ld => new { ld.LoanId, ld.BookId });
 

@@ -708,7 +708,7 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Account Setting</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Logout</a>
+                        <a id="logout" class="dropdown-item" href="#">Logout</a>
                       </li>
                     </div>
                   </ul>
@@ -807,6 +807,7 @@
                       <i class="fas fa-filter"></i>
                       Áp dụng
                     </button>
+
                   </div>
                 </div>
               </div>
@@ -863,15 +864,28 @@
 
                               <div class="row">
                                 <div class="col-sm-12">
-                                  <div class="form-group form-group-default">
-                                    <label for="bookFilterSelector">Tiêu đề sách</label>
-                                    <input
-                                      id="bookFilterSelector"
-                                      type="text"
-                                      class="form-control"
-                                      placeholder="Nhập riêu đề sách"
-                                    />
+                                  <div style="display: flex; align-items: center;">
+                                    <button
+                                      id="btn_selectBooks"
+                                      type="button"
+                                      class="btn btn-icon btn-round btn-black me-2 mb-2"
+                                    >
+                                      <i class="fas fa-book"></i>
+                                    </button>
+                                    <label class="form-label"><b>Sách mượn</b></label>
                                   </div>
+                                  <table class="table table-head-bg-primary">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Tiêu đề</th>
+                                        <th scope="col">Tác giả</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody id="table_selectedBooks">
+                                      
+                                    </tbody>
+                                  </table>
                                 </div>
 
                                   <div class="col-md-6 pe-1">
@@ -1064,5 +1078,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
     <script src="QLMuonTraSach.js"></script>
+    <script src="../script.js"></script>
   </body>
 </html>

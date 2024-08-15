@@ -21,11 +21,6 @@ namespace LibraryManagerApp.Data.Repository
             return books;
         }
 
-        public async Task<IEnumerable<Book>> SearchAsync(string query)
-        {
-            return await _context.Books
-                .Where(b => b.Title.Contains(query) || b.Author.Name.Contains(query) || b.Description.Contains(query))
-                .ToListAsync();
-        }
+        
     }
 }

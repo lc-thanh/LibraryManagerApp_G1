@@ -1432,7 +1432,16 @@
     <script>
         if (!localStorage.getItem('accessToken'))
         {
-            window.location.href = '../AuthPages/Auth.html';
+          window.location.href = './AuthPages/Auth.html';
+        }
+        if (getRole() != 'Admin')
+        {
+          if (getRole() === 'Librarian')
+          {
+            window.location.href = './QuanLyMuonTraSach/QLMuonTraSach.html';
+          }
+
+          // redirect to Member pages
         }
 
         function parseJwt (token) {

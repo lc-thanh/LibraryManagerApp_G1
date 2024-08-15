@@ -1,3 +1,8 @@
+if (!localStorage.getItem('accessToken'))
+{
+    window.location.href = '../AuthPages/Auth.html';
+}
+
 $(document).ready(function(){
     $("#memberSelector").select2();
     $("#bookSelector").select2();
@@ -94,6 +99,40 @@ $(document).ready(function(){
             bookSelector.append(option);
         });
     }
+
+    $('#btn_selectBooks').on('click', function() {
+        const newWindow = window.open('./selectBooks.html', 'Select Books', 'width=1500,height=850');
+        
+        window.addEventListener('focus', function() {
+            const selectedData = JSON.parse(localStorage.getItem('selectedData'));
+            if (selectedData) {
+                console.log('Dữ liệu đã chọn:', selectedData);
+
+                const tableBody = $('#table_selectedBooks');
+                tableBody.empty();
+                let index = 1;
+                selectedData.forEach(bookId => {
+                    console.log(bookId);
+                    
+                    $.ajax({
+                        url: 'https://localhost:44396/api/v1/Books/' + bookId,
+                        method: 'GET',
+                        success: function(response) {
+                            const row = `
+                                <tr id="${response.id}">
+                                    <td>${index++}</td>
+                                    <td>${response.title}</td>
+                                    <td>${(response.authorName) ? response.authorName : "Không"}</td>
+                                </tr>`;
+                            tableBody.append(row);
+                        }
+                    });
+                });
+
+                localStorage.removeItem('selectedData'); // Xóa sau khi sử dụng để tránh dữ liệu cũ
+            }
+        });
+    })
 
     $('#loanBookButton').on('click', function() {
         var formData = {

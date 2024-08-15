@@ -123,73 +123,7 @@ $(document).ready(function() {
                 
                 renderTable(response.items);
 
-                // Pagination
-                $('.pagination li').remove();
-                $('.pagination').html(`
-                    <li id="prevPage" class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                    </li>
-                    <li id="nextPage" class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </li>
-                `)
-
-                // Xác định khoảng trang muốn hiển thị
-                var startPage = Math.max(1, response.pageIndex - 2);
-                var endPage = Math.min(response.totalPages, response.pageIndex + 2);
-
-                // Lấy URL hiện tại của trang
-                var currentUrl = window.location.origin + window.location.pathname;
-                // Thêm các trang vào pagination
-                for (var i = startPage; i <= endPage; i++) {
-                    var activeClass = (i === response.pageIndex) ? ' active' : '';
-                    // var pageItem = `<li class="page-item${activeClass}"><a class="page-link" href="${currentUrl}?pageNumber=${i}">${i}</a></li>`;
-                    var pageItem = `<li class="page-item${activeClass}"><a class="page-link" href="#">${i}</a></li>`;
-                    $('#nextPage').before(pageItem);
-                }
-
-                // Kiểm tra và vô hiệu hóa nút Previous và Next
-                if (!response.hasPreviousPage) {
-                    $('#prevPage').addClass('disabled');
-                } else {
-                    $('#prevPage').removeClass('disabled');
-                }
-
-                if (!response.hasNextPage) {
-                    $('#nextPage').addClass('disabled');
-                } else {
-                    $('#nextPage').removeClass('disabled');
-                }
-
-                $('.page-item').on('click', function(e) {
-                    e.preventDefault()
-                    console.log($(this));
-                
-                    if ($(this).hasClass('disabled'))
-                    {
-                        return;
-                    }
-                    
-                    var currentPage = parseInt($('.pagination .page-item.active a').text());
-                
-                    // Xác định trang mới từ nút bấm
-                    if ($(this).attr('id') === 'prevPage') {
-                        currentPage--;
-                    } else if ($(this).attr('id') === 'nextPage') {
-                        currentPage++;
-                    } else {
-                        currentPage = parseInt($(this).text());
-                    }
-                
-                    pageNumber = currentPage;
-                    fetchBooks();
-                });
+                pagination(response)
             },
             error: function(response) {
                 if (response.status === 401) { // Token hết hạn
@@ -270,6 +204,74 @@ $(document).ready(function() {
                 </td>
             </tr>`;
             tableBody.append(row);
+        });
+    }
+
+    function pagination(response)
+    {
+        // Pagination
+        $('.pagination li').remove();
+        $('.pagination').html(`
+            <li id="prevPage" class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            <li id="nextPage" class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        `)
+
+        // Xác định khoảng trang muốn hiển thị
+        var startPage = Math.max(1, response.pageIndex - 2);
+        var endPage = Math.min(response.totalPages, response.pageIndex + 2);
+
+        // Thêm các trang vào pagination
+        for (var i = startPage; i <= endPage; i++) {
+            var activeClass = (i === response.pageIndex) ? ' active' : '';
+            // var pageItem = `<li class="page-item${activeClass}"><a class="page-link" href="${currentUrl}?pageNumber=${i}">${i}</a></li>`;
+            var pageItem = `<li class="page-item${activeClass}"><a class="page-link" href="#">${i}</a></li>`;
+            $('#nextPage').before(pageItem);
+        }
+
+        // Kiểm tra và vô hiệu hóa nút Previous và Next
+        if (!response.hasPreviousPage) {
+            $('#prevPage').addClass('disabled');
+        } else {
+            $('#prevPage').removeClass('disabled');
+        }
+
+        if (!response.hasNextPage) {
+            $('#nextPage').addClass('disabled');
+        } else {
+            $('#nextPage').removeClass('disabled');
+        }
+
+        $('.page-item').on('click', function(e) {
+            e.preventDefault()
+        
+            if ($(this).hasClass('disabled'))
+            {
+                return;
+            }
+            
+            var currentPage = parseInt($('.pagination .page-item.active a').text());
+        
+            // Xác định trang mới từ nút bấm
+            if ($(this).attr('id') === 'prevPage') {
+                currentPage--;
+            } else if ($(this).attr('id') === 'nextPage') {
+                currentPage++;
+            } else {
+                currentPage = parseInt($(this).text());
+            }
+        
+            pageNumber = currentPage;
+            fetchBooks();
         });
     }
 

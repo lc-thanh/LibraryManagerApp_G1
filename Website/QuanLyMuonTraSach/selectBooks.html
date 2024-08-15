@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chọn sách mượn</title>
+
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+    <link rel="icon" href="../assets/img/kaiadmin/favicon.ico" type="image/x-icon" />
+
+    <!-- Fonts and icons -->
+    <script src="../assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+        WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["../assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/css/plugins.min.css" />
+    <link rel="stylesheet" href="../assets/css/kaiadmin.min.css" />
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="../assets/css/demo.css" />
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <!-- My sources -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- BOOKS FILTER -->
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <h4 class="card-title">Tìm kiếm sách</h4>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row ">
+                    <div class="col-xl-4">
+                        <div class="form-group">
+                            <label for="searchBook">Tìm kiếm</label>
+                            <div class="input-icon" style="height: 35px;">
+                                <input id="searchBook" type="text" class="form-control"
+                                    placeholder="Tiêu đề, NXB, Ngăn sách" />
+                                <span class="input-icon-addon">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4">
+                        <div class="form-group">
+                            <label for="orderBySelect">Sắp xếp theo</label>
+                            <select class="form-select" style="height: 35px;" id="orderBySelect">
+                                <option value="">Không</option>
+                                <option value="Title-Asc">↑ Tiêu đề</option>
+                                <option value="Title-Desc">↓ Tiêu đề</option>
+                                <option value="Quantity-Asc">↑ Số lượng</option>
+                                <option value="Quantity-Desc">↓ Số lượng</option>
+                                <option value="AvailableQuantity-Asc">↑ Hiện có</option>
+                                <option value="AvailableQuantity-Desc">↓ Hiện có</option>
+                                <option value="TotalPages-Asc">↑ Số trang</option>
+                                <option value="TotalPages-Desc">↓ Số trang</option>
+                                <option value="PublishedYear-Asc">↑ Năm xuất bản</option>
+                                <option value="PublishedYear-Desc">↓ Năm xuất bản</option>
+                                <option value="CreatedOn-Asc">↑ Thời gian tạo</option>
+                                <option value="CreatedOn-Desc">↓ Thời gian tạo</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 pt-1">
+                        <label>Năm xuất bản</label>
+                        <div class="d-flex">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1">Từ</span>
+                                    <input id="startPubYear" type="number" class="form-control" placeholder="Bắt đầu" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1">Đến</span>
+                                    <input id="endPubYear" type="number" class="form-control" placeholder="Kết thúc" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-xl-6">
+                        <div class="form-group">
+                            <!-- https://select2.org/getting-started/basic-usage -->
+                            <label for="authorFilterSelector">Tác giả</label>
+                            <select id="authorFilterSelector" name="states[]" multiple="multiple" style="width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6">
+                        <div class="form-group">
+                            <!-- https://select2.org/getting-started/basic-usage -->
+                            <label for="categoryFilterSelector">Loại tài liệu</label>
+                            <select id="categoryFilterSelector" name="states[]" multiple="multiple"
+                                style="width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="btn_filter" class="btn btn-black btn-round ms-auto" style="float: inline-end;">
+                    <i class="fas fa-filter"></i>
+                    Áp dụng
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- END BOOKS FILTER -->
+
+    <!-- BOOKS TABLE -->
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <h4 class="card-title">Số lượng</h4>
+                    <select class="form-select ms-3" style="height: 35px; width: 100px;" id="pageSizeSelect">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Tiêu đề</th>
+                                <th scope="col">Ảnh</th>
+                                <th scope="col" style="padding: 5px !important;">Số lượng</th>
+                                <th scope="col" style="padding: 5px !important;">Hiện có</th>
+                                <th scope="col" style="padding: 5px !important;">Số trang</th>
+                                <th scope="col">Tác giả</th>
+                                <th scope="col">Loại tài liệu</th>
+                                <th scope="col">Ngăn sách</th>
+                                <th scope="col">Nhà xuất bản</th>
+                                <th scope="col">Năm xuất bản</th>
+                                <th scope="col">Thời gian tạo</th>
+                                <th scope="col">Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody id="booksTable">
+
+                        </tbody>
+                    </table>
+                    <div style="display: flex; justify-content: center;">
+                        <ul class="pagination pg-primary">
+                            <li id="prevPage" class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                            <li class="page-item active">
+                                <a class="page-link" href="#">1</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">2</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">3</a>
+                            </li>
+                            <li id="nextPage" class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END BOOKS TABLE -->
+
+    <!-- SELECTED BOOKS -->
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <h4 class="card-title">Sách đã chọn</h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Tiêu đề</th>
+                                <th scope="col">Ảnh</th>
+                                <th scope="col" style="padding: 5px !important;">Số lượng</th>
+                                <th scope="col" style="padding: 5px !important;">Hiện có</th>
+                                <th scope="col" style="padding: 5px !important;">Số trang</th>
+                                <th scope="col">Tác giả</th>
+                                <th scope="col">Loại tài liệu</th>
+                                <th scope="col">Ngăn sách</th>
+                                <th scope="col">Nhà xuất bản</th>
+                                <th scope="col">Năm xuất bản</th>
+                                <th scope="col">Thời gian tạo</th>
+                                <th scope="col">Bỏ chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody id="selectedBooks">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card-footer">
+                <div style="display: flex; justify-content: center;">
+                    <button id="btn_confirm" class="btn btn-success btn-round ms-auto" style="float: inline-end;">
+                        <i class="fas fa-check me-1"></i>
+                        Xác nhận
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END SELECTED BOOKS -->
+
+    <!--   Core JS Files   -->
+    <script src="../assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="../assets/js/core/popper.min.js"></script>
+    <script src="../assets/js/core/bootstrap.min.js"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="../assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+    <!-- Chart JS -->
+    <script src="../assets/js/plugin/chart.js/chart.min.js"></script>
+
+    <!-- jQuery Sparkline -->
+    <script src="../assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Chart Circle -->
+    <script src="../assets/js/plugin/chart-circle/circles.min.js"></script>
+
+    <!-- Datatables -->
+    <script src="../assets/js/plugin/datatables/datatables.min.js"></script>
+
+    <!-- Bootstrap Notify -->
+    <script src="../assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- jQuery Vector Maps -->
+    <script src="../assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
+    <script src="../assets/js/plugin/jsvectormap/world.js"></script>
+
+    <!-- Google Maps Plugin -->
+    <script src="../assets/js/plugin/gmaps/gmaps.js"></script>
+
+    <!-- Sweet Alert -->
+    <script src="../assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+    <!-- Kaiadmin JS -->
+    <script src="../assets/js/kaiadmin.min.js"></script>
+
+    <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+    <script src="../assets/js/setting-demo2.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+    <script src="./selectBooks.js"></script>
+    <script src="../script.js"></script>
+</body>
+
+</html>
