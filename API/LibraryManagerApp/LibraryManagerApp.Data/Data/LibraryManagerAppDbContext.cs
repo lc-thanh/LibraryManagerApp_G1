@@ -32,6 +32,10 @@ namespace LibraryManagerApp.Data.Data
                 .HasIndex(u => u.Email)
                 .IsUnique();
 
+            modelBuilder.Entity<Loan>()
+                .HasIndex(l => l.LoanCode)
+                .IsUnique();
+
 
             modelBuilder.Entity<Book>()
                 .HasOne<Author>(b => b.Author)

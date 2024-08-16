@@ -52,8 +52,41 @@ function logout() {
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
     localStorage.removeItem('role')
+    localStorage.removeItem('personalInfor')
 
     window.location.href = '../AuthPages/Auth.html';
+}
+
+function savePersonalInfor()
+{
+    $.ajax({
+        url: 'https://localhost:44396/api/v1/Auths',
+        headers: {
+            'Authorization': `Bearer ${getAccessToken()}` // Đính kèm Access Token vào header
+        },
+        method: 'GET',
+        success: function(response) {
+            localStorage.setItem('personalInfor', JSON.stringify(response))
+        },
+        error: function (response) {
+            if (response.status === 401) { // Token hết hạn
+                // Thử lấy Access Token mới bằng Refresh Token
+                refreshAccessToken()
+                    .done(function () {
+                        // Thử lại yêu cầu API với token mới
+                        return savePersonalInfor();
+                    })
+            } else {
+                console.error('API error:', response);
+            }
+        }
+    });
+}
+
+function getPersonalInfor()
+{
+    const infor = JSON.parse(localStorage.getItem('personalInfor'));
+    return infor;
 }
 
 $(document).ready(function() {

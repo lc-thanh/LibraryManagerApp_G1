@@ -56,6 +56,7 @@ $(document).ready(function () {
         localStorage.setItem('accessToken', response.token);
         localStorage.setItem('refreshToken', response.refreshToken);
         localStorage.setItem('role', response.role);
+        savePersonalInfor();
 
         // Chuyển hướng đến trang khác hoặc thực hiện các hành động khác
         redirect(response)
@@ -75,7 +76,7 @@ $(document).ready(function () {
       }
       else if (localStorage.getItem('role') === 'Librarian')
       {
-        window.location.href = '../QuanLySach/QLSach.html';
+        window.location.href = '../QuanLyMuonTraSach/QLMuonTraSach.html';
       }
     }
   })

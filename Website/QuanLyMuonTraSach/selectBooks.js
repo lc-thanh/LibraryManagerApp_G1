@@ -163,7 +163,7 @@ $(document).ready(function () {
                             type="checkbox"
                             value="${book.id}"
                             ${(selectedData.includes(book.id)) ? "checked" : ""}
-                            ${(book.quantity === 0) ? "disabled" : ""}
+                            ${(book.availableQuantity === 0) ? "disabled" : ""}
                         />
                     </td>
                 </tr>`;

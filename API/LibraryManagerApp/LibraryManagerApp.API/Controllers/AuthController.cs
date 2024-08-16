@@ -2,6 +2,7 @@
 using LibraryManagerApp.Data.Interfaces;
 using LibraryManagerApp.Data.Models;
 using LibraryManagerApp.Data.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -162,6 +163,24 @@ namespace LibraryManagerApp.API.Controllers
             );
 
             return token;
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetPersonalInformation()
+        {
+            // Get User
+            string userEmail = User.FindFirst(ClaimTypes.Name)?.Value;
+            var user = await _unitOfWork.UserRepository.GetByEmailAsync(userEmail);
+
+            return Ok(new 
+            { 
+                FullName = user.FullName,  
+                Email = user.Email,
+                Phone = user.Phone,
+                Address = user.Address,
+                DateOfBirth = user.DateOfBirth,
+            });
         }
 
         private JwtSecurityToken GenerateJwtToken(List<Claim> authClaims)
